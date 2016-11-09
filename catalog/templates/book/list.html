@@ -1,0 +1,29 @@
+<html>
+
+    <head> 
+        <title>My Books</title>
+            
+             </head>
+
+<h1>
+    My Books
+     </h1>
+
+
+{%if books %}
+
+{%for book in books%}
+
+<p> {{book.title}} {{book.author}} {{book.status}} {{book.genre}}
+
+    {{book.summary}} {{book.isbn}} </p>
+
+{%endfor%}
+
+{%else%}
+
+<p> No books</p>
+
+{%endif%}
+
+</html>
