@@ -170,11 +170,8 @@ class BookOrderInstance(models.Model):
         overdue_status = ''
 
         if datetime.today().date > self.due_date:
-
             overdue_status = 'Book Return Overdue'
-
         else:
-
             overdue_status = 'Not yet overdue'
 
         return overdue_status
