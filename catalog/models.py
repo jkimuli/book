@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from datetime import datetime,timedelta
+from django.conf import settings
 
 # Create your models here.
 
@@ -17,6 +18,7 @@ class Genre(models.Model):
 
         '''
         return self.name
+
 
 class Author(models.Model):
 
@@ -43,6 +45,7 @@ class Author(models.Model):
 
         return '%s, %s' % (self.first_name,self.last_name)
 
+
 class Borrower(models.Model):
 
     '''
@@ -50,11 +53,18 @@ class Borrower(models.Model):
 
     '''
 
+    GENDER = (
+
+        ('M','Male'),
+        ('F','Female')
+    )
+
     first_name = models.CharField(max_length=30,help_text='Enter first name')
     last_name = models.CharField(max_length=30,help_text='Enter last name')
     phone_number = models.CharField(max_length=30,verbose_name="Phone Number",help_text='Enter phone contact')
     alternate_phone_number = models.CharField(max_length=30,verbose_name='Other Phone Number',blank=True,null=True,help_text="Enter alternate phone contact")
-    address = models.CharField(max_length=100,blank=True,null=True)
+    address = models.CharField(max_length=100,blank=True,default= ' ',help_text='Enter the address of the borrower')
+    gender = models.CharField(max_length=1,choices=GENDER,default='M',help_text='Enter the gender of the borrower')
 
     def get_absolute_url(self):
 
@@ -84,10 +94,10 @@ class Book(models.Model):
     author = models.ForeignKey(Author,on_delete=models.SET_NULL,null=True,related_name='author_books')
     summary = models.TextField(max_length=1000,help_text='Enter a brief description of the book')
     isbn = models.CharField('ISBN',max_length=13,help_text='13-character ISBN number for the book',default='0000000000000')
-    genre = models.ManyToManyField(Genre,help_text='Select genre for this book',related_name='genre_books')
+    genres = models.ManyToManyField(Genre,help_text='Select genres for this book',related_name='genre_books')
     #status = models.CharField(max_length=1,choices=LOAN_STATUS,default='a',help_text='Book Availability status')
     is_available = models.BooleanField(default=True)
-    image = models.FileField(blank=True, default='book.png',upload_to='book_images/')
+    image = models.FileField(blank=True,upload_to='book_images/',default='book_images/book.png')
 
     def __str__(self):
 
@@ -109,6 +119,18 @@ class Book(models.Model):
     def get_absolute_url(self):
 
         return reverse('book_detail', args=[str(self.id)])
+
+    def display_genre(self):
+
+        '''
+          Return the genres specified for a given book as a string
+
+        '''
+
+        return ', '.join([genre.name for genre in self.genre.all()])
+
+    display_genre.short_description = 'Genres'
+
 
 class BookOrderInstance(models.Model):
 

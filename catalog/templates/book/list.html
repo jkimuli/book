@@ -14,7 +14,9 @@
 
 {%for book in books%}
 
-<p> {{book.title}} {{book.author}} {{book.status}} {{book.genre}}
+<p> <img src={{book.image.url}}></p>
+
+<p> {{book.title}} {{book.author}} {{book.status}}
 
     {{book.summary}} {{book.isbn}} </p>
 

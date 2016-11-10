@@ -124,4 +124,6 @@ MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+BOOK_IMAGE_PATH = os.path.join(MEDIA_ROOT,'book.png')
+
 

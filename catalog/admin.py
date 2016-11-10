@@ -5,19 +5,23 @@ from .models import Book,Genre,Author,BookOrderInstance,Borrower
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('title','author','isbn','summary','status')
+    list_display = ('title','author','isbn','summary','status','image','display_genre')
 
 @admin.register(Genre)
 class GenreAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name',)
+    search_fields = ('name',)
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('first_name','last_name',)
+    search_fields = ('first_name','last_name',)
 
 @admin.register(Borrower)
 class BorrowerAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('first_name','last_name','phone_number','alternate_phone_number','gender','address')
+    search_fields = ('first_name','last_name','gender')
+    list_filter = ('gender',)
 
 @admin.register(BookOrderInstance)
 class BookOrderAdmin(admin.ModelAdmin):
