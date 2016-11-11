@@ -43,7 +43,7 @@ class Author(models.Model):
 
         '''
 
-        return '%s, %s' % (self.first_name,self.last_name)
+        return '%s  %s' % (self.first_name,self.last_name)
 
 
 class Borrower(models.Model):
@@ -65,6 +65,7 @@ class Borrower(models.Model):
     alternate_phone_number = models.CharField(max_length=30,verbose_name='Other Phone Number',blank=True,null=True,help_text="Enter alternate phone contact")
     address = models.CharField(max_length=100,blank=True,default= ' ',help_text='Enter the address of the borrower')
     gender = models.CharField(max_length=1,choices=GENDER,default='M',help_text='Enter the gender of the borrower')
+    email = models.EmailField(max_length=254,default='',help_text='Enter an email address for the borrower')
 
     def get_absolute_url(self):
 
@@ -84,11 +85,20 @@ class Book(models.Model):
 
     """
 
-    LOAN_STATUS = (
+    '''LOAN_STATUS = (
 
         ('o','Loaned Out'),
         ('a', 'Available')
+    )'''
+
+    BOOK_TYPE = (
+
+        ('e','E-book'),
+        ('p','Paperback Book'),
+        ('a','Audio Book'),
+        ('h','HardCover Book')
     )
+
 
     title = models.CharField(max_length=200)
     author = models.ForeignKey(Author,on_delete=models.SET_NULL,null=True,related_name='author_books')
@@ -98,6 +108,7 @@ class Book(models.Model):
     #status = models.CharField(max_length=1,choices=LOAN_STATUS,default='a',help_text='Book Availability status')
     is_available = models.BooleanField(default=True)
     image = models.FileField(blank=True,upload_to='book_images/',default='book_images/book.png')
+    book_type = models.CharField(max_length=1,choices=BOOK_TYPE,default='p',help_text='Book Type such as e-book/paperback?')
 
     def __str__(self):
 
@@ -115,21 +126,41 @@ class Book(models.Model):
 
         return status
 
+    @property
+    def type(self):
+
+        type = ''
+
+        if self.book_type =='p':
+            type = 'Paperback Book'
+
+        elif self.book_type =='e':
+            type = 'E-book'
+
+        elif self.book_type =='h':
+            type = 'HardCover Book'
+
+        else:
+            type = 'Audio Book'
+
+        return type
+
 
     def get_absolute_url(self):
 
-        return reverse('book_detail', args=[str(self.id)])
+        return reverse('catalog:book_detail', args=[self.id])
 
-    def display_genre(self):
+    
+    def display_genres(self):
 
         '''
           Return the genres specified for a given book as a string
 
         '''
 
-        return ', '.join([genre.name for genre in self.genre.all()])
+        return ', '.join([genre.name for genre in self.genres.all()])
 
-    display_genre.short_description = 'Genres'
+    display_genres.short_description = 'Genres'
 
 
 class BookOrderInstance(models.Model):

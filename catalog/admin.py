@@ -5,7 +5,7 @@ from .models import Book,Genre,Author,BookOrderInstance,Borrower
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('title','author','isbn','summary','status','image','display_genre')
+    list_display = ('title','author','isbn','summary','status','image','display_genres')
 
 @admin.register(Genre)
 class GenreAdmin(admin.ModelAdmin):

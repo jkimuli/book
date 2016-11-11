@@ -1,0 +1,71 @@
+{% extends 'catalog/base.html'%}
+
+{%block title %}
+
+My Books - {{book.title}}
+
+{%endblock%}
+
+{%block content%}
+
+<div class='col-md-4'>
+
+    <img src="{{book.image.url}}">
+
+</div>
+
+<div class='col-md-4'>
+    <p> Book Description: {{book.summary}} </p>
+    <p> Book Title: {{book.title}}</p>
+    <p> Book Author: {{book.author}}</p>
+    <p> Book ISBN: {{book.isbn}}</p>
+    <p> Book Type: {{book.type}}
+    <p> Tags: {%if book.genres.all%}
+           {%for genre in book.genres.all%}
+              {{genre.name}},
+
+          {%endfor%}
+          </p>
+         {%endif%}</p>
+
+    <p> Availability:
+
+       {%if book.is_available %}
+
+       <span class='glyphicon glyphicon-check' aria-hidden="true"></span>
+       
+       {%else%}
+
+       <span class='glyphicon glyphicon-remove-sign' aria-hidden="true"></span>
+
+       {%endif%}
+
+    </p>
+
+       
+
+</div>
+
+<div class='col-md-4'>
+
+    {%if book.is_available%}
+
+        <a href="#" class="btn btn-primary col-md-4" role="button">Lend Book</a>
+
+    {%else%}
+
+        <a href="#" class="btn btn-primary col-md-4 disabled btn-warning" role="button">No Loan!</a>
+
+    {%endif%}
+
+    <br/> <br/>
+    <a href="{%url 'catalog:book_edit' book.id %}" class="btn btn-info col-md-4" role="button">Edit Book</a>
+
+    <br/> <br/>
+    <a href="{%url 'catalog:book_delete' book.id %}" class="btn btn-danger col-md-4" role="button">Delete Book</a>
+
+</div>
+
+{%endblock%}
+
+
