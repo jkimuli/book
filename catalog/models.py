@@ -9,7 +9,7 @@ class Genre(models.Model):
     '''
     Model representing a book genre eg Science Fiction,Thriller
     '''
-    name = models.CharField(max_length=200,help_text='Enter a book genre')
+    name = models.CharField(max_length=140,help_text='Enter a book genre')
 
     def __str__(self):
 
@@ -85,30 +85,14 @@ class Book(models.Model):
 
     """
 
-    '''LOAN_STATUS = (
-
-        ('o','Loaned Out'),
-        ('a', 'Available')
-    )'''
-
-    BOOK_TYPE = (
-
-        ('e','E-book'),
-        ('p','Paperback Book'),
-        ('a','Audio Book'),
-        ('h','HardCover Book')
-    )
-
-
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=140)
     author = models.ForeignKey(Author,on_delete=models.SET_NULL,null=True,related_name='author_books')
     summary = models.TextField(max_length=1000,help_text='Enter a brief description of the book')
     isbn = models.CharField('ISBN',max_length=13,help_text='13-character ISBN number for the book',default='0000000000000')
     genres = models.ManyToManyField(Genre,help_text='Select genres for this book',related_name='genre_books')
-    #status = models.CharField(max_length=1,choices=LOAN_STATUS,default='a',help_text='Book Availability status')
-    is_available = models.BooleanField(default=True)
+    is_available = models.BooleanField(default=True,help_text='Availability status of a book')
     image = models.FileField(blank=True,upload_to='book_images/',default='book_images/book.png')
-    book_type = models.CharField(max_length=1,choices=BOOK_TYPE,default='p',help_text='Book Type such as e-book/paperback?')
+    
 
     def __str__(self):
 
@@ -118,34 +102,13 @@ class Book(models.Model):
     def status(self):
 
         status = ''
-
         if self.is_available:
             status = 'Available'
         else:
             status = 'Loaned Out'
 
         return status
-
-    @property
-    def type(self):
-
-        type = ''
-
-        if self.book_type =='p':
-            type = 'Paperback Book'
-
-        elif self.book_type =='e':
-            type = 'E-book'
-
-        elif self.book_type =='h':
-            type = 'HardCover Book'
-
-        else:
-            type = 'Audio Book'
-
-        return type
-
-
+   
     def get_absolute_url(self):
 
         return reverse('catalog:book_detail', args=[self.id])
@@ -163,20 +126,19 @@ class Book(models.Model):
     display_genres.short_description = 'Genres'
 
 
+def default_due_date():
+        # default due date 90 days from creation date
+
+        return datetime.now() + timedelta(90)
+
 class BookOrderInstance(models.Model):
 
     '''
     Model representing when a specific book is loaned out -- tracking book rentals
 
     '''
-
-    def default_due_date():
-        # default due date 90 days from creation date
-
-        return datetime.now() + timedelta(90)
-
-    book = models.ForeignKey(Book,help_text='Enter book to be lent out')
-    borrower = models.ForeignKey(Borrower,help_text='Enter name of person borrowing book')
+    book = models.ForeignKey(Book,on_delete=models.CASCADE,help_text='Enter book to be lent out')
+    borrower = models.ForeignKey(Borrower,on_delete=models.CASCADE,help_text='Enter name of person borrowing book')
     loaned_out_date = models.DateField(auto_now_add=True)
     due_date = models.DateField(blank=True,default=default_due_date)
     is_returned = models.BooleanField(default=False,help_text='Mark a book as returned')
