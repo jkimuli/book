@@ -19,14 +19,7 @@ My Books - {{book.title}}
     <p> Book Title: {{book.title}}</p>
     <p> Book Author: {{book.author}}</p>
     <p> Book ISBN: {{book.isbn}}</p>
-    <p> Book Type: {{book.type}}
-    <p> Tags: {%if book.genres.all%}
-           {%for genre in book.genres.all%}
-              {{genre.name}},
-
-          {%endfor%}
-          </p>
-         {%endif%}</p>
+    <p> Tags: {{book.display_genres}}</p>
 
     <p> Availability:
 
@@ -49,9 +42,11 @@ My Books - {{book.title}}
 <div class='col-md-4'>
 
     {%if book.is_available%}
-
+       {%if user.is_authenticated%}
         <a href="#" class="btn btn-primary col-md-4" role="button">Lend Book</a>
-
+       {%else%}
+       <a href="#" class="btn btn-primary col-md-4" role="button">Register</a> 
+       {%endif%}
     {%else%}
 
         <a href="#" class="btn btn-primary col-md-4 disabled btn-warning" role="button">No Loan!</a>

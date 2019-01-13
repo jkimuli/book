@@ -6,6 +6,7 @@ from .models import Book,Genre,Author,BookOrderInstance,Borrower
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
     list_display = ('title','author','isbn','summary','status','image','display_genres')
+    filter_horizontal =('genres',)
 
 @admin.register(Genre)
 class GenreAdmin(admin.ModelAdmin):
@@ -25,7 +26,9 @@ class BorrowerAdmin(admin.ModelAdmin):
 
 @admin.register(BookOrderInstance)
 class BookOrderAdmin(admin.ModelAdmin):
-    list_display = ('book','borrower','loaned_out_date','due_date','return_date','is_returned')
+    list_display = ('book','borrower','loaned_out_date','due_date','return_date','is_returned','return_date_overdue')
+    fields=['book','borrower','is_returned']
+    
 
 
 admin.site.index_title = 'Book Catalog Administration'

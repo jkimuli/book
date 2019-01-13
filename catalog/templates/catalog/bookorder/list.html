@@ -1,34 +1,50 @@
-
 {%extends 'catalog/base.html'%}
 
 {%block title%}
 
-My Books 
+My Books - Book Rentals
 
 {%endblock%}
 
 {%block content%}
 
-{%if books %}
+{%if orders %}
 
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th>TITLE </th>
-      <th>AUTHOR</th>
-      <th>ISBN</th>
-      <th>AVAILABILTY</th>
+      <th>BOOK </th>
+      <th>BORROWER</th>
+      <th>LOAN DATE </th>
+      <th>DUE DATE</th>
+      <th>RETURN DATE </th>
+      <th>RETURN STATUS</th>
+      <th>OVERDUE STATUS</th>
+      
     </tr>
   </thead>
   <tbody>
 
-    {% for book in books %}
+    {% for order in orders %}
       <tr>
-        <td>{{ book.title }}</td>
-        <td>{{ book.author}}</td>
-        <td>{{ book.isbn }}</td>
-        <td>{{book.status}}</td>
-        <td><a href="{{book.get_absolute_url}}"> Show details </a></td>
+        <td>{{ order.book }}</td>
+        <td>{{ order.borrower}}</td>
+        <td>{{ order.loaned_out_date }}</td>
+        <td>{{ order.due_date}}</td>
+        <td>{{ order.return_date }}</td>
+        <td>
+            {%if order.is_returned %}
+
+            <span class='glyphicon glyphicon-check' aria-hidden="true"></span>
+            
+            {%else%}
+     
+            <span class='glyphicon glyphicon-remove-sign' aria-hidden="true"></span>
+     
+            {%endif%}
+        </td>
+        <td>{{order.return_date_overdue}}</td>
+        
       </tr>
     {% endfor %}
   </tbody>
@@ -58,7 +74,7 @@ My Books
 
 {%else%}
 
-<p> No books yet posted</p>
+<p> No book rentals yet! </p>
 
 {%endif%}
 
