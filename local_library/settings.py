@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'catalog.apps.CatalogConfig',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -126,5 +127,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 BOOK_IMAGE_PATH = os.path.join(MEDIA_ROOT,'book.png')
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 

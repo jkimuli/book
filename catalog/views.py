@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView,DeleteView
-from django.views.generic.detail import DetailView
-from django.views.generic.edit import UpdateView
+from django.views.generic import DetailView
+from django.views.generic import UpdateView
 from django.views.generic import CreateView
+from django.contrib.auth.mixins import UserPassesTestMixin
+
 from .models import Book,BookOrderInstance,Borrower
 
 # Create your views here.
@@ -56,11 +58,15 @@ class BookOrderListView(ListView):
     template_name = 'catalog/bookorder/list.html'
     context_object_name = 'orders'
 
-class BookOrderCreateView(CreateView):
+class BookOrderCreateView(UserPassesTestMixin,CreateView):
     model = BookOrderInstance
     template_name = 'catalog/bookorder/create.html'
     fields = ['book','borrower']
-    success_url = reverse_lazy('catalog:order_list')    
+    success_url = reverse_lazy('catalog:order_list')  
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True  
 
 
 
